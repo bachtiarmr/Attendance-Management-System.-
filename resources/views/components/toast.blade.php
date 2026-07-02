@@ -1,26 +1,25 @@
-@if (session()->has('success') || session()->has('error'))
-    <div id="toast-message" class="fixed top-5 right-5 z-[100] p-4 rounded-2xl shadow-2xl text-white font-bold flex items-center gap-3 transition-all duration-500 transform translate-x-0 
-            {{ session()->has('success') ? 'bg-green-600' : 'bg-red-600' }}">
+@props(['type' => 'success', 'message'])
 
-        <span>{{ session()->get('success') ?? session()->get('error') }}</span>
+@php
+    $styles = match ($type) {
+        'success' => 'bg-green-500',
+        'error' => 'bg-red-500',
+        'warning' => 'bg-yellow-500',
+        default => 'bg-slate-800',
+    };
+@endphp
 
-        <button onclick="closeToast()" class="hover:text-slate-200">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-        </button>
-    </div>
+<div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2
+     w-[340px] {{ $styles }} text-white rounded-xl shadow-lg z-50
+     px-5 py-3 text-center">
 
-    <script>
-        // Ilang otomatis setelah 3 detik
-        setTimeout(() => {
-            closeToast();
-        }, 3000);
+    {{ $message }}
 
-        function closeToast() {
-            const toast = document.getElementById('toast-message');
-            toast.classList.add('opacity-0', 'translate-x-full');
-            setTimeout(() => toast.remove(), 500);
-        }
-    </script>
-@endif
+</div>
+
+<script>
+    setTimeout(() => {
+        const el = document.getElementById('toast');
+        if (el) el.remove();
+    }, 2000);
+</script>

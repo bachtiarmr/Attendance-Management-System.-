@@ -3,31 +3,64 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Izin;
 use Illuminate\Http\Request;
 
 class IzinController extends Controller
 {
+    // lihat semua izin
     public function index()
     {
-        // Ambil semua izin, urutkan dari yang terbaru, dan ambil data usernya
-        $izin = Izin::with('user')->latest()->get();
-        return view('pages.admin.izin', compact('izin'));
+        $izin = session('izin', []);
+
+        return view('pages.admin.izin', [
+            'izin' => $this->sanitizeIzin($izin)
+        ]);
     }
 
+    // approve izin
     public function approve($id)
     {
-        $izin = Izin::findOrFail($id);
-        $izin->update(['status' => 'Disetujui']);
+        $izin = session('izin', []);
 
-        return back()->with('success', 'Izin telah disetujui.');
+        foreach ($izin as &$item) {
+
+            if (($item['id'] ?? null) == $id) {
+                $item['status'] = 'Disetujui';
+            }
+
+        }
+
+        session()->put('izin', $izin);
+
+        return back();
     }
-
     public function reject($id)
     {
-        $izin = Izin::findOrFail($id);
-        $izin->update(['status' => 'Ditolak']);
+        $izin = session('izin', []);
 
-        return back()->with('success', 'Izin telah ditolak.');
+        foreach ($izin as &$item) {
+
+            if (($item['id'] ?? null) == $id) {
+                $item['status'] = 'Ditolak';
+            }
+
+        }
+
+        session()->put('izin', $izin);
+
+        return back();
+    }
+    private function sanitizeIzin($data)
+    {
+        return array_map(function ($item) {
+            return [
+                'id' => $item['id'] ?? uniqid(),
+                'nama' => $item['nama'] ?? 'Unknown',
+                'tanggal' => $item['tanggal'] ?? date('Y-m-d'),
+                'alasan' => $item['alasan'] ?? '-',
+                'file' => $item['file'] ?? null,
+                'status' => $item['status'] ?? 'Pending',
+            ];
+        }, $data);
     }
 }

@@ -1,51 +1,41 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Admin Panel | Présent</title>
+    <title>Admin Dashboard</title>
     @vite('resources/css/app.css')
 </head>
 
-<body class="bg-slate-50 text-slate-800">
-    <x-toast />
-    <div class="flex min-h-screen">
+<body class="bg-slate-100 text-slate-800">
+
+    <div class="flex">
+
         <x-admin.sidebar />
-        <div class="flex-1">
+
+        <div class="flex-1 min-h-screen">
+
             <x-admin.navbar />
+
             <main class="p-8">
                 @yield('content')
             </main>
+
         </div>
+
     </div>
+    <script>
+        function openModal() {
+            document.getElementById('modal-karyawan').classList.remove('hidden');
+            document.getElementById('modal-karyawan').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-karyawan').classList.add('hidden');
+            document.getElementById('modal-karyawan').classList.remove('flex');
+        }
+    </script>
+
 </body>
-<script>
-    function openModal(modalId) {
-        const modal = document.getElementById(modalId);
-        const modalBox = document.getElementById(modalId + '-box');
-
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-
-        // Timeout biar animasinya smooth
-        setTimeout(() => {
-            modalBox.classList.remove('scale-95');
-            modalBox.classList.add('scale-100');
-        }, 10);
-    }
-
-    function closeModal(modalId) {
-        const modal = document.getElementById(modalId);
-        const modalBox = document.getElementById(modalId + '-box');
-
-        modalBox.classList.remove('scale-100');
-        modalBox.classList.add('scale-95');
-
-        setTimeout(() => {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }, 300);
-    }
-</script>
 
 </html>

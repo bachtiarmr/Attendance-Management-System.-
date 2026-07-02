@@ -1,26 +1,37 @@
-<aside class="w-64 bg-white border-r min-h-screen p-6 sticky top-0">
-    <h2 class="text-2xl font-extrabold text-slate-900 mb-10 tracking-tight pl-4">présent<span
-            class="text-blue-600">.</span></h2>
+<aside class="w-64 bg-white border-r min-h-screen p-6">
+
+    <h2 class="text-xl font-bold mb-8 tracking-wide">
+        présent
+    </h2>
+
     <nav class="space-y-2 text-sm">
-        @php $links = [
-            ['name' => 'Absen', 'route' => 'user.dashboard'],
-            ['name' => 'Laporan Absensi', 'route' => 'user.laporan'],
-            ['name' => 'Perizinan', 'route' => 'user.izin'],
-        ]; @endphp
-                @foreach($links as $link)
-                    <a href="{{ route($link['route']) }}" class="flex items-center px-4 py-2.5 rounded-xl font-medium transition {{ request()->routeIs($link['route']) ? 'bg-slate-900 text-white shadow-lg shadow-slate-200' : 'text-slate-600 hover:bg-slate-50' }}">
-                        {{ $link['name'] }}
-                    </a>
-                @endforeach
 
+        {{-- ABSEN (HOME) --}}
+        <a href="{{ route('user.dashboard') }}" class="block px-4 py-2 rounded-lg
+           {{ request()->routeIs('user.dashboard') ? 'bg-slate-800 text-white' : 'hover:bg-slate-100' }}">
+            Absen
+        </a>
 
-                           <div class="pt-6 border-t mt-6">
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button class="w-full text-left px-4 py-2.5 rounded-xl text-red-500 font-medium hover:bg-red-50 transition">
-                    Logout
-                </button>
-            </form>
-        </div>
+        {{-- LAPORAN --}}
+        <a href="{{ route('user.laporan') }}" class="block px-4 py-2 rounded-lg
+           {{ request()->routeIs('user.laporan') ? 'bg-slate-800 text-white' : 'hover:bg-slate-100' }}">
+            Laporan Absensi
+        </a>
+
+        {{-- PERIZINAN --}}
+        <a href="{{ route('user.izin') }}" class="block px-4 py-2 rounded-lg
+           {{ request()->routeIs('user.izin') ? 'bg-slate-800 text-white' : 'hover:bg-slate-100' }}">
+            Perizinan
+        </a>
+
+        {{-- LOGOUT (PALING BAWAH) --}}
+        <form method="POST" action="/logout" class="pt-6">
+            @csrf
+            <button class="w-full text-left px-4 py-2 rounded-lg text-red-500 hover:bg-red-50">
+                Logout
+            </button>
+        </form>
+
     </nav>
+
 </aside>
