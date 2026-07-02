@@ -1,111 +1,68 @@
 @extends('layouts.admin')
 
+@section('title', 'Kelola Izin')
+
 @section('content')
 
-    <div class="mb-6">
-        <h1 class="text-2xl font-semibold">Permohonan Izin</h1>
-        <p class="text-slate-500 text-sm">Kelola pengajuan izin karyawan</p>
+    <div class="mb-8">
+        <h1 class="text-3xl font-black text-slate-900 tracking-tight">Permohonan Izin</h1>
+        <p class="text-slate-500 font-medium">Kelola pengajuan izin karyawan</p>
     </div>
 
-    <div class="bg-white rounded-2xl border shadow-sm p-6">
-
-        <table class="w-full text-sm table-fixed">
-
-            <thead>
-                <tr class="border-b text-slate-500 text-left">
-                    <th class="py-3 w-[18%]">Nama</th>
-                    <th class="py-3 w-[15%]">Tanggal</th>
-                    <th class="py-3 w-[25%]">Alasan</th>
-                    <th class="py-3 w-[12%]">File</th>
-                    <th class="py-3 w-[15%]">Status</th>
-                    <th class="py-3 w-[15%] text-right">Aksi</th>
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <table class="w-full text-sm text-left">
+            <thead class="bg-slate-50 text-slate-600 uppercase text-xs font-bold">
+                <tr>
+                    <th class="px-6 py-4">Nama</th>
+                    <th class="px-6 py-4">Tanggal</th>
+                    <th class="px-6 py-4">Alasan</th>
+                    <th class="px-6 py-4">File</th>
+                    <th class="px-6 py-4">Status</th>
+                    <th class="px-6 py-4 text-right">Aksi</th>
                 </tr>
             </thead>
-
-            <tbody>
-
+            <tbody class="divide-y divide-slate-100">
                 @forelse($izin as $item)
-
-                    <tr class="border-b hover:bg-slate-50 transition">
-
-                        {{-- NAMA --}}
-                        <td class="py-3 font-medium">
-                            {{ $item['nama'] }}
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="px-6 py-4 font-semibold text-slate-900">{{ $item->user->name }}</td>
+                        <td class="px-6 py-4 text-slate-600">{{ \Carbon\Carbon::parse($item->tanggal_mulai)->format('d M Y') }}
                         </td>
-
-                        {{-- TANGGAL --}}
-                        <td class="py-3 text-slate-600">
-                            {{ $item['tanggal'] }}
-                        </td>
-
-                        {{-- ALASAN --}}
-                        <td class="py-3 text-slate-700">
-                            {{ $item['alasan'] }}
-                        </td>
-
-                        {{-- FILE --}}
-                        <td class="py-3">
-                            @if(!empty($item['file']))
-                                <span class="text-blue-600 text-sm">
-                                    {{ $item['file'] }}
-                                </span>
+                        <td class="px-6 py-4 text-slate-700 max-w-[200px] truncate">{{ $item->alasan }}</td>
+                        <td class="px-6 py-4">
+                            @if($item->file)
+                                <a href="{{ asset('storage/' . $item->file) }}" target="_blank"
+                                    class="text-blue-600 font-bold hover:underline text-xs">Lihat File</a>
                             @else
-                                <span class="text-slate-400 text-xs">Tidak ada</span>
+                                <span class="text-slate-400 text-xs italic">Tanpa file</span>
                             @endif
                         </td>
-
-                        {{-- STATUS --}}
-                        <td class="py-3">
-                            <x-status :status="$item['status']" />
+                        <td class="px-6 py-4">
+                            <x-status :status="$item->status" />
                         </td>
-
-                        {{-- AKSI --}}
-                        <td class="py-3 text-right space-x-2">
-
-                            @if($item['status'] == 'Pending')
-
-                                {{-- APPROVE --}}
-                                <form method="POST" action="{{ route('admin.izin.approve', $item['id']) }}" class="inline">
+                        <td class="px-6 py-4 text-right space-x-2">
+                            @if($item->status == 'Pending')
+                                <form method="POST" action="{{ route('admin.izin.approve', $item->id) }}" class="inline">
                                     @csrf
-
-                                    <x-admin.button type="submit" color="green">
-                                        Setuju
-                                    </x-admin.button>
+                                    <button
+                                        class="bg-green-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-green-700">Setuju</button>
                                 </form>
-
-                                {{-- REJECT --}}
-                                <form method="POST" action="{{ route('admin.izin.reject', $item['id']) }}" class="inline">
+                                <form method="POST" action="{{ route('admin.izin.reject', $item->id) }}" class="inline">
                                     @csrf
-
-                                    <x-admin.button type="submit" color="red">
-                                        Tolak
-                                    </x-admin.button>
+                                    <button
+                                        class="bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-700">Tolak</button>
                                 </form>
-
                             @else
-                                <span class="text-xs text-slate-400">
-                                    Selesai
-                                </span>
+                                <span class="text-slate-400 text-xs font-bold uppercase tracking-wider">Selesai</span>
                             @endif
-
                         </td>
-
                     </tr>
-
                 @empty
-
                     <tr>
-                        <td colspan="6" class="text-center py-6 text-slate-500">
-                            Belum ada pengajuan izin
-                        </td>
+                        <td colspan="6" class="px-6 py-10 text-center text-slate-400">Belum ada pengajuan izin.</td>
                     </tr>
-
                 @endforelse
-
             </tbody>
-
         </table>
-
     </div>
 
 @endsection

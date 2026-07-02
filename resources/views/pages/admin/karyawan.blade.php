@@ -1,55 +1,70 @@
 @extends('layouts.admin')
 
 @section('content')
-
-    <div class="mb-6">
-        <h1 class="text-2xl font-semibold">Karyawan</h1>
-        <p class="text-slate-500 text-sm">Manage employee data</p>
+    <div class="mb-8 flex justify-between items-end">
+        <div>
+            <h1 class="text-3xl font-black text-slate-900 tracking-tight">Karyawan</h1>
+            <p class="text-slate-500 font-medium">Manajemen data dan akun karyawan</p>
+        </div>
+        <button onclick="openModal('modal-karyawan')"
+            class="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-800 transition">
+            Tambah Karyawan
+        </button>
     </div>
 
-    <div class="bg-white p-6 rounded-2xl border shadow-sm">
-
-        <!-- Search + Action -->
-        <div class="flex justify-between mb-4">
-            <input type="text" placeholder="Cari karyawan..."
-                class="border px-4 py-2 rounded-lg w-1/3 focus:outline-none focus:ring-2 focus:ring-slate-300">
-
-            <x-admin.button color="blue" onclick="openModal('modal-karyawan')">
-                + Tambah
-            </x-admin.button>
-        </div>
-
-        <!-- Table -->
-        <table class="w-full text-sm">
-            <thead>
-                <tr class="border-b text-left">
-                    <th class="py-3">Nama</th>
-                    <th class="py-3">Divisi</th>
-                    <th class="py-3">Status</th>
-                    <th class="py-3 text-right">Aksi</th>
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <table class="w-full text-sm text-left">
+            <thead class="bg-slate-50 text-slate-600 uppercase text-xs font-bold">
+                <tr>
+                    <th class="px-6 py-4">Nama</th>
+                    <th class="px-6 py-4">Divisi</th>
+                    <th class="px-6 py-4">Status</th>
+                    <th class="px-6 py-4 text-right">Aksi</th>
                 </tr>
             </thead>
-
-            <tbody>
+            <tbody class="divide-y divide-slate-100">
                 @foreach($karyawan as $item)
-                    <tr class="border-b hover:bg-slate-50">
-                        <td class="py-3">{{ $item['nama'] }}</td>
-                        <td class="py-3">{{ $item['divisi'] }}</td>
-                        <td class="py-3">{{ $item['status'] }}</td>
-                        <td class="py-3 text-right space-x-2">
-                            <x-admin.button color="blue">Edit</x-admin.button>
-                            <x-admin.button color="red">Hapus</x-admin.button>
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="px-6 py-4 font-semibold text-slate-900">{{ $item->name }}</td>
+                        <td class="px-6 py-4 text-slate-600">{{ $item->divisi->nama_divisi ?? '-' }}</td>
+                        <td class="px-6 py-4">
+                            <span
+                                class="px-2 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded-lg">{{ $item->status }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <form action="{{ route('admin.karyawan.destroy', $item->id) }}" method="POST">
+                                @csrf @method('DELETE')
+                                <button class="text-red-600 font-bold hover:underline">Hapus</button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-
     </div>
 
-    <!-- 🔥 MODAL -->
     <x-admin.modal id="modal-karyawan">
-        <x-admin.form-karyawan />
-    </x-admin.modal>
+        <h2 class="text-xl font-black mb-6">Tambah Karyawan</h2>
+        <form action="{{ route('admin.karyawan.store') }}" method="POST">
+            @csrf
+            <div class="space-y-4">
+                <input type="text" name="name" placeholder="Nama Lengkap" required class="w-full border rounded-lg p-3">
+                <input type="email" name="email" placeholder="Email (untuk login)" required
+                    class="w-full border rounded-lg p-3">
+                <input type="password" name="password" placeholder="Password Awal" required
+                    class="w-full border rounded-lg p-3">
+                <select name="divisi_id" class="w-full border rounded-lg p-3 bg-white">
+                    @foreach($divisis as $d)
+                        <option value="{{ $d->id }}">{{ $d->nama_divisi }}</option>
+                    @endforeach
+                </select>
 
+                <button type="submit" class="w-full bg-slate-900 text-white py-3 rounded-lg font-bold">Simpan</button>
+                <button type="button" onclick="closeModal('modal-karyawan')"
+                    class="w-full text-slate-400 font-medium hover:text-slate-600">
+                    Batal
+                </button>
+            </div>
+        </form>
+    </x-admin.modal>
 @endsection
