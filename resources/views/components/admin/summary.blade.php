@@ -1,11 +1,12 @@
 @props(['summary'])
 
-<div class="grid grid-cols-3 gap-6">
+<div class="grid grid-cols-4 gap-6">
     @php
         $cards = [
             ['title' => 'Total Hadir (Bulan Ini)', 'value' => $summary['hadir'], 'border' => 'border-green-500'],
             ['title' => 'Total Terlambat (Bulan Ini)', 'value' => $summary['terlambat'], 'border' => 'border-red-500'],
             ['title' => 'Total Izin (Bulan Ini)', 'value' => $summary['izin'], 'border' => 'border-amber-500'],
+            ['title' => 'Total Tidak Hadir (Bulan Ini)', 'value' => $summary['alpa'], 'border' => 'border-gray-500'],
         ];
     @endphp
 

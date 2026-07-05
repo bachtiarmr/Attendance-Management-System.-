@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
         Route::resource('/karyawan', KaryawanController::class);
+        Route::put('/karyawan/{id}/reset-password', [KaryawanController::class, 'resetPassword'])->name('karyawan.reset-password');
         Route::resource('/divisi', DivisiController::class);
         Route::resource('/kehadiran', KehadiranController::class);
 

@@ -1,12 +1,13 @@
 @props(['stats'])
 
-<div class="grid grid-cols-4 gap-6 mb-8">
+<div class="grid grid-cols-5 gap-6 mb-8">
     @php
         $items = [
             ['title' => 'Total Karyawan', 'value' => $stats['total_karyawan'], 'color' => 'blue'],
             ['title' => 'Hadir Hari Ini', 'value' => $stats['hadir'], 'color' => 'green'],
             ['title' => 'Sedang Izin', 'value' => $stats['izin'], 'color' => 'amber'],
             ['title' => 'Terlambat', 'value' => $stats['terlambat'], 'color' => 'red'],
+            ['title' => 'Tidak Hadir', 'value' => $stats['alpa'], 'color' => 'gray'],
         ];
     @endphp
 

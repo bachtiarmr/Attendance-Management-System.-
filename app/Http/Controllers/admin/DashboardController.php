@@ -20,6 +20,7 @@ class DashboardController extends Controller
                 ->whereDate('tanggal_selesai', '>=', Carbon::today())
                 ->where('status', 'disetujui')->count(),
             'terlambat' => Kehadiran::whereDate('tanggal', Carbon::today())->where('status', 'terlambat')->count(),
+            'alpa' => Kehadiran::whereDate('tanggal', Carbon::today())->where('status', 'alpa')->count(),
         ];
 
         // 2. Traffic Senin - Jumat (Minggu Berjalan)
@@ -50,6 +51,7 @@ class DashboardController extends Controller
             'hadir' => Kehadiran::whereMonth('tanggal', Carbon::now()->month)->where('status', 'hadir')->count(),
             'terlambat' => Kehadiran::whereMonth('tanggal', Carbon::now()->month)->where('status', 'terlambat')->count(),
             'izin' => Izin::whereMonth('tanggal_mulai', Carbon::now()->month)->where('status', 'disetujui')->count(),
+            'alpa' => Kehadiran::whereMonth('tanggal', Carbon::now()->month)->where('status', 'alpa')->count(),
         ];
 
         return view('pages.admin.dashboard', compact('stats', 'traffic', 'summary'));
