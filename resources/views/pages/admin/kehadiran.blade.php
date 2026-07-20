@@ -30,11 +30,40 @@
             <tbody>
 
                 @forelse($kehadiran as $item)
+<<<<<<< HEAD
                         <tr class="border-b hover:bg-slate-50 {{ $item['status'] === 'telat' ? 'bg-red-50' : '' }}">
 
                             <td class="py-3 font-medium">
                                 {{ $item['nama'] }}
                             </td>
+=======
+                    <tr class="hover:bg-slate-50 transition {{ $item->status === 'telat' ? 'bg-red-50/50' : '' }}">
+                        <td class="px-6 py-4 font-semibold text-slate-900">{{ $item->user->name ?? 'User Deleted' }}</td>
+                        <td class="px-6 py-4 text-slate-600">{{ $item->user->divisi->nama_divisi ?? '-' }}</td>
+                        <td class="px-6 py-4 text-slate-600">{{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}</td>
+                        <td class="px-6 py-4 text-slate-600">
+                            {{ $item->check_in ? \Carbon\Carbon::parse($item->check_in)->format('H:i') : '-' }}
+                        </td>
+                        <td class="px-6 py-4 text-slate-600">
+                            {{ $item->check_out ? \Carbon\Carbon::parse($item->check_out)->format('H:i') : '-' }}
+                        </td>
+
+                        {{-- Durasi Kerja --}}
+                        <td class="px-6 py-4 font-bold text-slate-700">
+                            @if($item->status === 'alpa')
+                                <span class="text-red-600 text-xs">Tidak Hadir</span>
+                            @elseif($item->check_in && $item->check_out)
+                                @php
+                                    $start = \Carbon\Carbon::parse($item->check_in);
+                                    $end = \Carbon\Carbon::parse($item->check_out);
+                                    $diff = $start->diff($end);
+                                @endphp
+                                {{ $diff->h }}j {{ $diff->i }}m
+                            @else
+                                <span class="text-amber-600 text-xs">On Going</span>
+                            @endif
+                        </td>
+>>>>>>> d9ab3cbcc48faa649be3822073a24b29e165c6a4
 
                             <td class="py-3 text-slate-600">
                                 {{ $item['divisi'] }}
